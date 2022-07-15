@@ -46,7 +46,8 @@ class AuthRoutes extends BaseRoute {
 
         return {
           token : Jwt.sign({
-            username: username.toLowerCase(),
+            username: user.username.toLowerCase(),
+            id: user.id
           }, this.secret)
         }
       }

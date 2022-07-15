@@ -12,7 +12,7 @@ const USER = {
 
 const USER_DB = {
   username: USER.username.toLowerCase(),
-  password: '$2b$04$W0sV8jIXA0LLZwXCxslp3.9B9miqxijiieHVrI4vUzOgPlSgNo3Nu'
+  password: '$2b$10$jqDIr7kqlZXAfLl0F6LeQOwvFpb/K5Z8L7kpwGmrWm6cF68PqgBU.'
 };
 
 describe('Auth test suite', function () {
