@@ -59,15 +59,15 @@ class HeroRoutes extends BaseRoute {
       method: 'POST',
       config: {
         tags:['api'],
-        description: 'Should register heroes',
+        description: 'Should register an heroes',
         notes: 'Should register hero by name and power',
         validate: {
           failAction,
           headers,
-          payload: {
+          payload: Joi.object({
             name: Joi.string().required().min(3).max(100),
             power: Joi.string().required().min(2).max(100),
-          }
+          }).label('Add hero')
         }
       },
       handler: async (request) => {
@@ -76,7 +76,7 @@ class HeroRoutes extends BaseRoute {
           const { _id } = await this.db.create({ name, power});
           return {
             _id,
-            message: 'Hero registered with sucess'
+            message: 'Hero registered with success'
           }
         } catch (error) {
           console.log('Error', error);
@@ -92,17 +92,17 @@ class HeroRoutes extends BaseRoute {
       method: 'PATCH',
       config: {
         tags:['api'],
-        description: 'Should update hero',
+        description: 'Should update an hero',
         notes: 'Should update hero by id',
         validate: {
           params: {
             id: Joi.string().required()
           },
           headers,
-          payload: {
+          payload: Joi.object({
             name: Joi.string().min(3).max(100),
             power: Joi.string().min(3).max(100)
-          }
+          }).label('Update hero')
         }
       },
       handler: async (request) => {
@@ -137,7 +137,7 @@ class HeroRoutes extends BaseRoute {
       method: 'DELETE',
       config: {
         tags:['api'],
-        description: 'Should delete hero',
+        description: 'Should delete an hero',
         notes: 'Should delete hero based on id',
         validate: {
           params: {

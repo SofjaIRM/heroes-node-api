@@ -103,7 +103,7 @@ describe('Tests suite for Heroes API', function () {
 
     assert.ok(statusCode === 200);
     assert.notStrictEqual(_id, undefined)
-    assert.deepEqual(message, "Hero registered with sucess");
+    assert.deepEqual(message, "Hero registered with success");
   });
 
   it('PATCH - Update hero on route /heroes/:id', async () => {

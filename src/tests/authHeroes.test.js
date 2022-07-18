@@ -7,28 +7,75 @@ const UserSchema = require('./../db/strategies/postgres/schemas/userSchema');
 let app = {};
 const USER = {
   username: 'sunlight',
-  password: '123'
+  password: '12399999'
 }
 
-const USER_DB = {
-  username: USER.username.toLowerCase(),
-  password: '$2b$10$jqDIr7kqlZXAfLl0F6LeQOwvFpb/K5Z8L7kpwGmrWm6cF68PqgBU.'
-};
-
-describe('Auth test suite', function () {
+describe.only('Auth test suite', function () {
   this.beforeAll(async () => {
     app = await api;
-
     const connectionPostgres = await PostgresDB.connect();
     const model = await PostgresDB.defineModel(connectionPostgres, UserSchema);
     const postgresModel = new Context(new PostgresDB(connectionPostgres, model));
-    await postgresModel.update(null, USER_DB, true);
+    const [user] = await postgresModel.read({username: USER.username});
+    if (user) {
+      await postgresModel.delete(user.id);
+    }
+  });
+
+  it('should register a new user', async () => {
+    const { statusCode, payload } = await app.inject({
+      method: 'POST',
+      url: '/auth/signup',
+      payload: USER,
+    });
+
+    assert.deepEqual(statusCode, 200);
+    assert.deepEqual(JSON.parse(payload).message, 'User registered with success')
+  });
+
+  it('should not register if user already exists', async () => {
+    const { statusCode, payload } = await app.inject({
+      method: 'POST',
+      url: '/auth/signup',
+      payload: USER,
+    });
+
+    assert.deepEqual(statusCode, 401);
+    assert.deepEqual(JSON.parse(payload).error, 'Unauthorized')
+  });
+
+  it('should return error 400 if username has less then 5 characters', async () => {
+    const { statusCode, payload } = await app.inject({
+      method: 'POST',
+      url: '/auth/signup',
+      payload: {
+        username: 'sun',
+        password: USER.password
+      }
+    });
+
+    assert.deepEqual(statusCode, 400);
+    assert.deepEqual(JSON.parse(payload).error, 'Bad Request');
+  });
+
+  it('should return error 400 if password has less then 8 characters', async () => {
+    const { statusCode, payload } = await app.inject({
+      method: 'POST',
+      url: '/auth/signup',
+      payload: {
+        username: USER.username,
+        password: '993'
+      }
+    });
+
+    assert.deepEqual(statusCode, 400);
+    assert.deepEqual(JSON.parse(payload).error, 'Bad Request');
   });
 
   it('should get a token', async () => {
     const { statusCode, payload } = await app.inject({
       method: 'POST',
-      url: '/login',
+      url: '/auth/login',
       payload: USER,
     });
 
@@ -39,18 +86,16 @@ describe('Auth test suite', function () {
   });
 
   it('should return not authorized if login returns an error', async () => {
-    const result = await app.inject({
+    const { statusCode, payload } = await app.inject({
       method: 'POST',
-      url: '/login',
+      url: '/auth/login',
       payload: {
         username: 'skylight',
         password: '123323'
       }
     });
 
-    const statusCode = result.statusCode;
-
     assert.deepEqual(statusCode, 401);
-    assert.deepEqual(JSON.parse(result.payload).error, "Unauthorized");
+    assert.deepEqual(JSON.parse(payload).error, "Unauthorized");
   });
 });
