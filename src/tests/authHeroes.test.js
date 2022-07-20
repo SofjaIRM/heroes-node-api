@@ -10,7 +10,7 @@ const USER = {
   password: '12399999'
 }
 
-describe.only('Auth test suite', function () {
+describe('Auth test suite', function () {
   this.beforeAll(async () => {
     app = await api;
     const connectionPostgres = await PostgresDB.connect();
