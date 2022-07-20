@@ -86,4 +86,4 @@ npm run test:watch
 
 [http://localhost:5000/documentation](http://localhost:5000/documentation)
 
-[http://localhost:5000/coverage](http://localhost:5000/coverage/)
+[http://localhost:5000/coverage/](http://localhost:5000/coverage/)
