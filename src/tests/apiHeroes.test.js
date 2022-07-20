@@ -63,7 +63,7 @@ describe('Tests suite for Heroes API', function () {
     const data = JSON.parse(payload);
 
     assert.deepEqual(statusCode, 200);
-    assert.ok(data.length === LIMIT);
+    assert.ok(data.length <= LIMIT);
   });
 
   it('GET - Should return error 400 if limit is invalid', async () => {
@@ -78,7 +78,7 @@ describe('Tests suite for Heroes API', function () {
   });
 
   it('GET - Should return just one hero', async () => {
-    const NAME = MOCK_HERO.name;
+    const NAME = MOCK_STARTER_HERO.name;
     const { statusCode, payload } = await app.inject({
       method: 'GET',
       headers,
@@ -88,7 +88,7 @@ describe('Tests suite for Heroes API', function () {
     const [hero] = JSON.parse(payload);
     assert.deepEqual(statusCode, 200);
     //assert.deepEqual(hero.name, NAME);
-    assert.deepEqual(hero.name, hero.name);
+    assert.deepEqual(hero.name, NAME);
   });
 
   it('POST - Register hero on route /heroes', async () => {
