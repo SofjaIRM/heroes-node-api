@@ -63,7 +63,7 @@ sleep 5;
 
 docker exec -it mongodb \
     mongo --host localhost -u admin -p passwordadmin --authenticationDatabase admin \
-    --eval "db.getSiblingDB('herois').createUser({user: 'username', pwd: 'mysecretpassword', roles: [{role: 'readWrite', db: 'heroes'}]})"
+    --eval "db.getSiblingDB('heroes').createUser({user: 'username', pwd: 'mysecretpassword', roles: [{role: 'readWrite', db: 'heroes'}]})"
 ```
 
 ### Setup environment variables
